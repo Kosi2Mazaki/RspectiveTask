@@ -15,7 +15,10 @@ var taskSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    subtasks: [this]
+    subtasks: [{
+        'type': mongoose.Schema.Types.ObjectId,
+        'ref': 'Task'
+    }]
 });
 
 /**
