@@ -1,0 +1,25 @@
+{
+  "name": "rspectivetaskserver",
+  "version": "1.0.0",
+  "description": "Used as test",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Test\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kosi2Mazaki/RspectiveTask.git"
+  },
+  "author": "JCW",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kosi2Mazaki/RspectiveTask/issues"
+  },
+  "homepage": "https://github.com/Kosi2Mazaki/RspectiveTask#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mongodb": "^2.2.30",
+    "mongoose": "^4.11.1"
+  }
+}
