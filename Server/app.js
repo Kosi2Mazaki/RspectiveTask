@@ -26,22 +26,23 @@ mongoose.connect(config.database, { useMongoClient: true });
 app.route('/authenticate')
     .post(userController.authenticate);
 
-// AUTHENTICATION!!!!
-app.use((request, response, next) => {
-    var token = request.body.token;
-    if (!token) {
-        common.handleError("Token not present", 'Please authenticate first', response);
-    } else {
-        webToken.verify(token, config.secret, function (err, publicKey) {
-            if (err) {
-                common.handleError("Token not authorized!", err, response);
-            } else {
-                request.decoded = publicKey;
-                next();
-            }
-        });
-    }
-});
+// AUTHENTICATION!!!! - remove a comment after GUI done
+
+// app.use((request, response, next) => {
+//     var token = request.body.token;
+//     if (!token) {
+//         common.handleError("Token not present", 'Please authenticate first', response);
+//     } else {
+//         webToken.verify(token, config.secret, function (err, publicKey) {
+//             if (err) {
+//                 common.handleError("Token not authorized!", err, response);
+//             } else {
+//                 request.decoded = publicKey;
+//                 next();
+//             }
+//         });
+//     }
+// });
 
 // Routes
 app.route('/tasks')
