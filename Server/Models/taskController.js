@@ -1,17 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
 var Task = require('./task');
-
-/**
- * Used to handle server error. The message will be logged into the
- * console and than the 500 error will be returned as the response
- * @param {string} message - message to be passed to the application
- * @param {object} err - error received from the server
- */
-function handleError(message, err) {
-    console.log(message + ": " + err);
-    //res.status(500).send(message + ".");
-}
+var common = require('./common');
 
 /**
  * Function used to get all tasks from the database
@@ -21,7 +11,7 @@ function handleError(message, err) {
 exports.list_all_tasks = function (req, res) {
     Task.find({}, function (err, tasks) {
         if (err) {
-            handleError("Some Internal error while listing tasks occurred", err);
+            common.handleError("Some Internal error while listing tasks occurred", err);
         } else {
             console.log(tasks);
             res.send(tasks);
@@ -39,7 +29,7 @@ exports.get_task = function (req, res) {
         populate('subtasks')
         .exec(function (err, task) {
             if (err) {
-                handleError("Some Internal error while fetching a single task occurred", err);
+                common.handleError("Some Internal error while fetching a single task occurred", err);
             } else {
                 res.send(task);
             }
@@ -56,7 +46,7 @@ exports.create_task = function (req, res) {
 
     newTask.save(function (err) {
         if (err) {
-            handleError("Some Internal error while creating tasks occurred", err);
+            common.handleError("Some Internal error while creating tasks occurred", err);
         } else {
             res.send(newTask);
         }
@@ -71,19 +61,19 @@ exports.create_task = function (req, res) {
 exports.create_subtask = function (req, res) {
     Task.findById(req.params.id, function (err, parent) {
         if (err) {
-            handleError("Some Internal error while creating a sub-tasks occurred", err);
+            common.handleError("Some Internal error while creating a sub-tasks occurred", err);
         }
 
         var newTask = new Task(req.body);
         newTask.save(function (err) {
             if (err) {
-                handleError("Some Internal error while creating tasks occurred", err);
+                common.handleError("Some Internal error while creating tasks occurred", err);
             }
         });
         parent.subtasks.push(newTask);
         parent.save(function (err, updatedTask) {
             if (err) {
-                handleError("Some Internal error while creating tasks occurred", err);
+                common.handleError("Some Internal error while creating tasks occurred", err);
             } else {
                 res.send(newTask);
             }
@@ -99,7 +89,7 @@ exports.create_subtask = function (req, res) {
 exports.remove_task = function (req, res) {
     Task.findByIdAndRemove(req.params.id, function (err, element) {
         if (err) {
-            handleError("Some Internal error while removing a task occurred", err);
+            common.handleError("Some Internal error while removing a task occurred", err);
         }
     });
 
@@ -110,7 +100,7 @@ exports.remove_task = function (req, res) {
         { multi: true },
         function (err) {
             if (err) {
-                handleError("Some Internal error while removing a reference to the task occurred", err);
+                common.handleError("Some Internal error while removing a reference to the task occurred", err);
             }
 
         }
