@@ -1,2 +1,6 @@
+.vscode
+
 Server/Data/*
 Server/node_modules/*
+
+Client/node_modules/*
