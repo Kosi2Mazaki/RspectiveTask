@@ -1,22 +1,24 @@
-'use strict';
-var path = require('path');
-var express = require('express');
-var app = express();
-var config = require('./config');
-var mongoose = require('mongoose');
-var Task = require('./Models/task');
-var User = require('./Models/user');
-var taskController = require('./Models/taskController');
-var userController = require('./Models/userController');
-var bodyParser = require('body-parser');
-var common = require('./Models/common');
-var webToken = require('jsonwebtoken');
+var path = require('path')
+var express = require('express')
+var cors = require('cors')
+var app = express()
+var config = require('./config')
+var mongoose = require('mongoose')
+var Task = require('./Models/task')
+var User = require('./Models/user')
+var taskController = require('./Models/taskController')
+var userController = require('./Models/userController')
+var bodyParser = require('body-parser')
+var common = require('./Models/common')
+var webToken = require('jsonwebtoken')
 
+app.use(cors());
 
 // enable parameters parsing
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(bodyParser.json());
 
 // disable all warnings about deprecated modules
 mongoose.Promise = global.Promise;
@@ -26,23 +28,22 @@ mongoose.connect(config.database, { useMongoClient: true });
 app.route('/authenticate')
     .post(userController.authenticate);
 
-// AUTHENTICATION!!!! - remove a comment after GUI done
-
-// app.use((request, response, next) => {
-//     var token = request.body.token;
-//     if (!token) {
-//         common.handleError("Token not present", 'Please authenticate first', response);
-//     } else {
-//         webToken.verify(token, config.secret, function (err, publicKey) {
-//             if (err) {
-//                 common.handleError("Token not authorized!", err, response);
-//             } else {
-//                 request.decoded = publicKey;
-//                 next();
-//             }
-//         });
-//     }
-// });
+// AUTHENTICATION!!!!
+app.use((request, response, next) => {
+    var token = request.headers.authorization;
+    if (!token) {
+        common.handleError("Token not present", 'Please authenticate first', response);
+    } else {
+        webToken.verify(token, config.secret, function (err, publicKey) {
+            if (err) {
+                common.handleError("Token not authorized!", err, response);
+            } else {
+                request.decoded = publicKey;
+                next();
+            }
+        });
+    }
+});
 
 // Routes
 app.route('/tasks')
@@ -57,8 +58,6 @@ app.route('/tasks/:id')
 app.route('/users')
     .get(userController.get_users)
     .post(userController.create_user);
-
-
 
 // ERROR Handler
 app.use((err, request, response, next) => {
