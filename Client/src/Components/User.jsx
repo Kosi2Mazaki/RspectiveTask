@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { Button } from 'react-bootstrap'
 import { requestProxy } from '../appconfig'
 import history from '../appconfig'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 /**
  * Class responsible for user management.
@@ -153,6 +154,7 @@ class UserForm extends Component {
                         onClick={() => this.props.onUserLogout()}>
                         Logout
                     </Button>
+                    <p className="message">You can now go to the <Link to="/home">Home</Link> page</p>
                 </div>
             )
         }

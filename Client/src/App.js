@@ -52,13 +52,13 @@ class App extends Component {
               <Panel>
                 <AppAlert />
 
-                <Link to="/todos">Home</Link>
-                <Link to="/user">Login</Link>
+                <Link to="/home">Home</Link>
+                <Link to="/user">User</Link>
 
 
                 <Panel>
                   <Route path="/user" component={User} />
-                  <Navigator path="/todos" component={Home} />
+                  <Navigator path="/home" component={Home} />
                 </Panel>
               </Panel>
             </Router>
