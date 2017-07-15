@@ -28,7 +28,6 @@ export default function alert(state = initialAlertValue, action) {
                 show: false
             }
         case alertActions.SET_TYPE:
-            console.log(action)
             return {
                 ...state,
                 type: action.messageType

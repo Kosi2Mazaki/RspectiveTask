@@ -28,6 +28,9 @@ mongoose.connect(config.database, { useMongoClient: true });
 app.route('/authenticate')
     .post(userController.authenticate);
 
+app.route('/users')
+    .post(userController.create_user);
+
 // AUTHENTICATION!!!!
 app.use((request, response, next) => {
     var token = request.headers.authorization;
@@ -56,8 +59,7 @@ app.route('/tasks/:id')
     .delete(taskController.remove_task);
 
 app.route('/users')
-    .get(userController.get_users)
-    .post(userController.create_user);
+    .get(userController.get_users);
 
 // ERROR Handler
 app.use((err, request, response, next) => {

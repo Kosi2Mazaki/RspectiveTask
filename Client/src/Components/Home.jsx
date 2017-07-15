@@ -17,7 +17,6 @@ class Home extends Component {
         // this.props.history.push('/')
     }
     fetchData() {
-        var localprops = this.props;
         requestProxy.get('/tasks')
             .then(function () {
 

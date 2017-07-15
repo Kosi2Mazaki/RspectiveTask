@@ -13,8 +13,18 @@ import history from '../appconfig'
  * Username and logout button when user is logged in
  */
 class UserForm extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            register: false
+        }
+    }
 
-    handleSubmit(user) {
+    /**
+     * Used to login the user
+     * @param {Object} user Object with user info
+     */
+    loginUser(user) {
         var dispatcher = this.formDispatch;
         requestProxy.post('/authenticate',
             { name: user.username, password: user.password })
@@ -36,9 +46,38 @@ class UserForm extends Component {
                 // clear form
                 dispatcher(actions.reset('userForm.username'))
                 dispatcher(actions.reset('userForm.password'))
-                // history.push('/home')
-                // window.location.reload()
-            }).catch(function (error) {
+            }).catch((error) => {
+                dispatcher(
+                    alertActions.setType(
+                        alertActions.AlertType.ERROR
+                    ));
+                dispatcher(
+                    alertActions.showAlert(
+                        error.response.status + ' (' + error.response.statusText + '): ' + error.response.data
+                    ));
+            });
+    }
+    /**
+     * Used to create newuser
+     * @param {Object} user Object with user info
+     */
+    registerUser(user) {
+        var dispatcher = this.formDispatch;
+        requestProxy.post('/users',
+            { name: user.username, password: user.password }).then(response => {
+                // show info
+                dispatcher(
+                    alertActions.setType(
+                        alertActions.AlertType.INFO
+                    ));
+                dispatcher(
+                    alertActions.showAlert(
+                        "User successfully created. You can now Login"
+                    ));
+                this.setState({ register: false })
+                dispatcher(actions.reset('userForm.username'))
+                dispatcher(actions.reset('userForm.password'))
+            }).catch((error) => {
                 dispatcher(
                     alertActions.setType(
                         alertActions.AlertType.ERROR
@@ -51,6 +90,19 @@ class UserForm extends Component {
     }
 
     /**
+     * Used to handle form submission
+     * @param {Object} user User object
+     * @param {*} register Variable indicating if user should be created or registered
+     */
+    handleSubmit(user, register) {
+        if (register) {
+            this.registerUser(user)
+        } else {
+            this.loginUser(user)
+        }
+    }
+
+    /**
      * Function used by redux-form to obtain dispatch object
      * @param {Object} dispatch 
      */
@@ -58,35 +110,43 @@ class UserForm extends Component {
         this.formDispatch = dispatch;
     }
 
+    toggleRegister() {
+        this.setState({ register: !this.state.register })
+    }
+
     render() {
         if (!this.props.user.username) {
-            return (
-                <div>
-                    < Form
-                        model="userForm"
-                        getDispatch={(dispatch) => this.attachDispatch(dispatch)}
-                        onSubmit={(userForm) => this.handleSubmit(userForm)}>
-                        <Control.text
-                            placeholder="Username"
-                            model="userForm.username"
-                            id="userForm.username" />
-                        <Control.text
-                            placeholder="Password"
-                            type="password"
-                            model="userForm.password"
-                            id="userForm.password" />
-                        <p>
-                            <button type="submit" className="btn btn-primary">Login</button>
-                        </p>
-                    </Form >
 
-                </div>
+            return (
+                < Form
+                    model="userForm"
+                    className="panelBody"
+                    getDispatch={(dispatch) => this.attachDispatch(dispatch)}
+                    onSubmit={(userForm) => this.handleSubmit(userForm, this.state.register)}>
+                    <Control.text
+                        placeholder="Username"
+                        model="userForm.username"
+                        id="userForm.username" />
+                    <Control.text
+                        placeholder="Password"
+                        type="password"
+                        model="userForm.password"
+                        id="userForm.password" />
+                    <p>
+                        <button type="submit" className="btn btn-primary">{this.state.register ? "Register" : "Login"}</button>
+                    </p>
+                    {
+                        this.state.register ?
+                            <p className="message" onClick={this.toggleRegister.bind(this)}>Already registered? <a href="#">Sign In</a></p> :
+                            <p className="message" onClick={this.toggleRegister.bind(this)}>Not registered? <a href="#">Create an account</a></p>
+                    }
+                </Form >
             )
         } else {
             return (
-                <div>
-                    <div className="list-group-item-success">
-                        Logged as: {this.props.user.username}
+                <div className="panelBody">
+                    <div className="input">
+                        Logged as: <b>{this.props.user.username}</b>
                     </div>
                     <Button
                         bsStyle="primary"

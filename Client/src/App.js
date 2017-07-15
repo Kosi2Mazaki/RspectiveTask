@@ -49,33 +49,71 @@ class App extends Component {
 
           <div>
             <Router>
-              <Grid>
-                <Row>
-                  <Panel>
+              <Panel>
+                <AppAlert />
 
-                    <AppAlert />
+                <Link to="/todos">Home</Link>
+                <Link to="/user">Login</Link>
 
 
-                    <Col xs={6}>
-
-                    </Col>
-                    <Col xs={6}>
-                      <Link to="/home">Home</Link>
-                      <Link to="/user">Login</Link>
-                    </Col>
-                  </Panel>
-                </Row>
-                <Row>
-                  <Panel>
-                    <Route path="/user" component={User} />
-                    <Navigator path="/home" component={Home} />
-                  </Panel>
-                </Row>
-              </Grid >
-            </Router >
+                <Panel>
+                  <Route path="/user" component={User} />
+                  <Navigator path="/todos" component={Home} />
+                </Panel>
+              </Panel>
+            </Router>
           </div>
         </div >
       </Provider >
+
+
+      // <Provider store={store} >
+      //   <div>
+      //     <Panel>
+      //       <div className="App">
+      //         <Grid className="App-header">
+      //           <Row className="show-grid">
+      //             <Col xs={6} md={8} >
+      //               <h2>Welcome to RspectiveTaskValidator</h2>
+      //             </Col>
+      //             <Col xs={2} md={2}>
+      //               <img src={logo} className="icon-animation" alt="logo" />
+      //             </Col>
+
+      //           </Row>
+      //         </Grid >
+      //       </div>
+      //     </Panel>
+
+      //     <div>
+      //       <Router>
+      //         <Grid>
+      //           <Row>
+      //             <Panel>
+
+      //               <AppAlert />
+
+
+      //               <Col xs={6}>
+
+      //               </Col>
+      //               <Col xs={6}>
+      //                 <Link to="/home">Home</Link>
+      //                 <Link to="/user">Login</Link>
+      //               </Col>
+      //             </Panel>
+      //           </Row>
+      //           <Row>
+      //             <Panel>
+      //               <Route path="/user" component={User} />
+      //               <Navigator path="/home" component={Home} />
+      //             </Panel>
+      //           </Row>
+      //         </Grid >
+      //       </Router >
+      //     </div>
+      //   </div >
+      // </Provider >
     );
   }
 }
